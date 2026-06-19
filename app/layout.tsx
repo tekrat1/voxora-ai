@@ -10,8 +10,8 @@ const monaSans = Mona_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "PrepWise",
-  description: "An AI-powered platform for preparing for mock interviews",
+  title: "Voxora AI",
+  description: "Voxora AI – AI Interview Preparation Platform",
 };
 
 export default function RootLayout({

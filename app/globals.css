@@ -5,27 +5,27 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --color-success-100: #00E676;
+  --color-success-200: #00C853;
 
-  --color-success-100: #49de50;
-  --color-success-200: #42c748;
-  --color-destructive-100: #f75353;
-  --color-destructive-200: #c44141;
+  --color-destructive-100: #FF5F6D;
+  --color-destructive-200: #E53935;
 
-  --color-primary-100: #dddfff;
-  --color-primary-200: #cac5fe;
+  --color-primary-100: #E6FBFF;
+  --color-primary-200: #00D4FF;
 
-  --color-light-100: #d6e0ff;
-  --color-light-400: #6870a6;
-  --color-light-600: #4f557d;
-  --color-light-800: #24273a;
+  --color-light-100: #F8FCFF;
+  --color-light-400: #8AA6C1;
+  --color-light-600: #5B728A;
+  --color-light-800: #1F2B38;
 
-  --color-dark-100: #020408;
-  --color-dark-200: #27282f;
-  --color-dark-300: #242633;
+  --color-dark-100: #050B14;
+  --color-dark-200: #0B1220;
+  --color-dark-300: #121C2B;
 
   --font-mona-sans: "Mona Sans", sans-serif;
 
-  --bg-pattern: url("//pattern.png");
+  --bg-pattern: none;
 }
 
 :root {
@@ -141,7 +141,16 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    background:
+            radial-gradient(circle at top left,
+            rgba(0,212,255,.15),
+            transparent 30%),
+            radial-gradient(circle at bottom right,
+            rgba(0,255,163,.12),
+            transparent 30%),
+            #050B14;
+
+    color: white;
   }
   p {
     @apply text-light-100;
@@ -177,7 +186,18 @@
     @apply flex min-h-14 w-full items-center justify-center gap-1.5 rounded-md;
   }
   .btn-primary {
-    @apply w-fit !bg-primary-200 !text-dark-100 hover:!bg-primary-200/80 !rounded-full !font-bold px-5 cursor-pointer min-h-10;
+    @apply w-fit rounded-full font-bold px-6 min-h-11 cursor-pointer;
+
+    background: linear-gradient(
+            135deg,
+            #00D4FF,
+            #00FFA3
+    );
+
+    color: #050B14;
+
+    box-shadow:
+            0 0 25px rgba(0,212,255,.3);
   }
   .btn-secondary {
     @apply w-fit !bg-dark-200 !text-primary-200 hover:!bg-dark-200/80 !rounded-full !font-bold px-5 cursor-pointer min-h-10;
@@ -192,7 +212,16 @@
   }
 
   .card {
-    @apply dark-gradient rounded-2xl min-h-full;
+    @apply rounded-2xl min-h-full;
+
+    background: rgba(255,255,255,0.04);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+            0 8px 32px rgba(0,0,0,.35);
   }
 
   .form {
@@ -297,11 +326,11 @@
 }
 
 @utility dark-gradient {
-  @apply bg-gradient-to-b from-[#1A1C20] to-[#08090D];
+  @apply bg-gradient-to-br from-[#050B14] via-[#081524] to-[#0D1B2A];
 }
 
 @utility border-gradient {
-  @apply bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33];
+  @apply bg-gradient-to-r from-[#00D4FF] via-[#00FFA3] to-[#00D4FF];
 }
 
 @utility pattern {
@@ -309,11 +338,11 @@
 }
 
 @utility blue-gradient-dark {
-  @apply bg-gradient-to-b from-[#171532] to-[#08090D];
+  @apply bg-gradient-to-br from-[#081524] via-[#0B1F38] to-[#132A45];
 }
 
 @utility blue-gradient {
-  @apply bg-gradient-to-l from-[#FFFFFF] to-[#CAC5FE];
+  @apply bg-gradient-to-r from-[#00D4FF] to-[#00FFA3];
 }
 
 @utility flex-center {

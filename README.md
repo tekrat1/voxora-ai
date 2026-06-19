@@ -1,4 +1,4 @@
-# Prepwise ..
+# Voxora AI ..
 
 A job interview preparation platform powered by AI voice agents and Firebase.
 
