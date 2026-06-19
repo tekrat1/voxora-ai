@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { isAuthenticated } from "@/lib/actions/auth.action";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import LogoutButton from "@/components/LogoutButton";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
     const isUserAuthenticated = await isAuthenticated();
@@ -33,6 +34,13 @@ const Layout = async ({ children }: { children: ReactNode }) => {
                         >
                             My Progress
                         </Link>
+                        <Link
+                            href="/copilot"
+                            className="text-sm font-semibold text-light-100 hover:text-primary-200 transition-colors flex items-center gap-1"
+                        >
+                            <span>⚡</span> Copilot
+                        </Link>
+                        <LogoutButton />
                     </div>
                 </nav>
 
