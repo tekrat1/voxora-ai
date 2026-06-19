@@ -20,12 +20,20 @@ const Layout = async ({ children }: { children: ReactNode }) => {
                         <h2 className="text-primary-100">Voxora AI</h2>
                     </Link>
 
-                    <Link
-                        href="/progress"
-                        className="text-sm font-semibold text-light-100 hover:text-primary-200 transition-colors"
-                    >
-                        My Progress
-                    </Link>
+                    <div className="flex items-center gap-6">
+                        <Link
+                            href="/jobs"
+                            className="text-sm font-semibold text-light-100 hover:text-primary-200 transition-colors"
+                        >
+                            Job Match
+                        </Link>
+                        <Link
+                            href="/progress"
+                            className="text-sm font-semibold text-light-100 hover:text-primary-200 transition-colors"
+                        >
+                            My Progress
+                        </Link>
+                    </div>
                 </nav>
 
                 {children}

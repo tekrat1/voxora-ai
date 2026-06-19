@@ -101,6 +101,51 @@ interface TechIconProps {
   techStack: string[];
 }
 
+interface JobListing {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  remote: boolean;
+  type: string; // Full-time, Internship, Contract...
+  requiredSkills: string[];
+  niceToHaveSkills?: string[];
+  description: string;
+  applyUrl: string;
+  postedAt: string;
+}
+
+interface JobMatchResult {
+  jobId: string;
+  title: string;
+  company: string;
+  location: string;
+  remote: boolean;
+  type: string;
+  applyUrl: string;
+  matchScore: number;
+  matchedSkills: string[];
+  missingSkills: string[];
+  reasoning: string;
+  recommendation: string;
+}
+
+interface ResumeProfile {
+  role: string;
+  level: string;
+  skills: string[];
+  highlights: string[];
+}
+
+interface JobMatchResponse {
+  profile: ResumeProfile;
+  matches: JobMatchResult[];
+  isPro: boolean;
+  dailyLimit: number;
+  matchesUsedToday: number;
+  remainingToday: number;
+}
+
 interface ProgressDataPoint {
   feedbackId: string;
   interviewId: string;
