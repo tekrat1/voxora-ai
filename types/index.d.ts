@@ -24,6 +24,8 @@ interface Interview {
   userId: string;
   type: string;
   finalized: boolean;
+  source?: "form" | "resume";
+  resumeHighlights?: string[];
 }
 
 interface CreateFeedbackParams {

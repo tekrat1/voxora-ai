@@ -11,7 +11,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     if (!isUserAuthenticated) redirect("/sign-in");
 
     return (
-        <div className="relative">
+        <div className="relative" suppressHydrationWarning>
             <AnimatedBackground />
             <div className="root-layout relative z-10">
                 <nav className="flex items-center justify-between">

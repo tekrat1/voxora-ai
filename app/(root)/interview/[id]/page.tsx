@@ -48,6 +48,24 @@ const InterviewDetails = async ({ params }: RouteParams) => {
           </p>
         </div>
 
+        {interview.source === "resume" &&
+            interview.resumeHighlights &&
+            interview.resumeHighlights.length > 0 && (
+                <div className="card p-4 flex flex-col gap-2">
+                  <p className="text-sm font-semibold text-primary-200">
+                    Pulled from your resume
+                  </p>
+                  <ul className="flex flex-col gap-1.5">
+                    {interview.resumeHighlights.map((point, i) => (
+                        <li key={i} className="text-sm text-light-100 flex gap-2">
+                          <span className="text-primary-200">•</span>
+                          {point}
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+            )}
+
         <Agent
             userName={user.name}
             userId={user.id}
