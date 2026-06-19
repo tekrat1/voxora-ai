@@ -1,12 +1,13 @@
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
+import { groq } from "@ai-sdk/groq";
+import pdfParse from "pdf-parse";
 
 import { db } from "@/firebase/admin";
 import { getRandomInterviewCover } from "@/lib/utils";
 
-// Gemini can read PDF/image files natively as part of a multimodal message,
-// so we don't need a separate PDF-parsing dependency — we just hand the
-// resume bytes straight to the model along with instructions.
+// Groq's models don't accept raw PDF/file bytes the way Gemini did, so we
+// extract the resume's text ourselves first (via pdf-parse) and then send
+// plain text to the model along with instructions.
 export async function POST(request: Request) {
     const {
         resumeBase64,
@@ -30,20 +31,63 @@ export async function POST(request: Request) {
             );
         }
 
+        if (mimeType && mimeType !== "application/pdf") {
+            return Response.json(
+                {
+                    success: false,
+                    error: "Only PDF resumes are supported right now.",
+                },
+                { status: 400 }
+            );
+        }
+
+        // Decode the base64 PDF and pull out its text content.
+        const pdfBuffer = Buffer.from(resumeBase64, "base64");
+        let resumeText: string;
+        try {
+            const parsed = await pdfParse(pdfBuffer);
+            resumeText = parsed.text?.trim() ?? "";
+        } catch (parseError) {
+            console.error("Failed to parse resume PDF:", parseError);
+            return Response.json(
+                {
+                    success: false,
+                    error:
+                        "Couldn't read that PDF. Make sure it's a valid, text-based resume (not a scanned image).",
+                },
+                { status: 400 }
+            );
+        }
+
+        if (!resumeText || resumeText.length < 50) {
+            return Response.json(
+                {
+                    success: false,
+                    error:
+                        "Couldn't extract enough text from that resume. It may be a scanned image rather than a text-based PDF.",
+                },
+                { status: 400 }
+            );
+        }
+
+        // Groq's free tier caps tokens-per-minute (~6-12K for this model), so
+        // trim very long resumes to stay comfortably within that budget.
+        const MAX_RESUME_CHARS = 12000;
+        if (resumeText.length > MAX_RESUME_CHARS) {
+            resumeText = resumeText.slice(0, MAX_RESUME_CHARS);
+        }
+
         const { text: raw } = await generateText({
-            model: google("gemini-2.0-flash-001"),
+            model: groq("llama-3.3-70b-versatile"),
             messages: [
                 {
                     role: "user",
-                    content: [
-                        {
-                            type: "file" as const,
-                            data: resumeBase64,
-                            mimeType: mimeType || "application/pdf",
-                        },
-                        {
-                            type: "text" as const,
-                            text: `You are an expert technical recruiter. Read the attached resume carefully.
+                    content: `You are an expert technical recruiter. Read the resume text below carefully.
+
+RESUME TEXT:
+"""
+${resumeText}
+"""
 
 From it, infer:
 - The candidate's most likely target job role (be specific, e.g. "Senior Frontend Engineer").
@@ -55,7 +99,7 @@ Then generate ${amount} interview questions personalized to THIS resume — refe
 
 Do not use "/" or "*" or other special characters that could break a voice assistant reading the questions aloud.
 
-Respond with ONLY raw JSON, no markdown fences, in exactly this shape:
+Respond with ONLY raw JSON, no markdown fences, no commentary, in exactly this shape:
 {
   "role": "string",
   "level": "Junior | Mid | Senior",
@@ -63,8 +107,6 @@ Respond with ONLY raw JSON, no markdown fences, in exactly this shape:
   "resumeHighlights": ["string", "string"],
   "questions": ["string", "string"]
 }`,
-                        },
-                    ],
                 },
             ],
         });

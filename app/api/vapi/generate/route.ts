@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
+import { groq } from "@ai-sdk/groq";
 
 import { db } from "@/firebase/admin";
 import { getRandomInterviewCover } from "@/lib/utils";
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
   try {
     const { text: questions } = await generateText({
-      model: google("gemini-2.0-flash-001"),
+      model: groq("llama-3.3-70b-versatile"),
       prompt: `Prepare questions for a job interview.
         The job role is ${role}.
         The job experience level is ${level}.
@@ -25,12 +25,18 @@ export async function POST(request: Request) {
     `,
     });
 
+    const cleaned = questions
+        .trim()
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/```\s*$/i, "")
+        .trim();
+
     const interview = {
       role: role,
       type: type,
       level: level,
       techstack: techstack.split(","),
-      questions: JSON.parse(questions),
+      questions: JSON.parse(cleaned),
       userId: userid,
       finalized: true,
       coverImage: getRandomInterviewCover(),
