@@ -57,7 +57,17 @@ async function Home() {
             </section>
 
             <section className="flex flex-col gap-6 mt-8">
-                <h2>Your Interviews</h2>
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                    <h2>Your Interviews</h2>
+                    {hasPastInterviews && (
+                        <Link
+                            href="/progress"
+                            className="text-sm font-semibold text-primary-200 hover:underline"
+                        >
+                            View My Progress →
+                        </Link>
+                    )}
+                </div>
 
                 <div className="interviews-section">
                     {hasPastInterviews ? (

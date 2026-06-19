@@ -14,10 +14,17 @@ const Layout = async ({ children }: { children: ReactNode }) => {
         <div className="relative">
             <AnimatedBackground />
             <div className="root-layout relative z-10">
-                <nav>
+                <nav className="flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2">
                         <Image src="/logo.svg" alt="Voxora AI Logo" width={38} height={32} />
                         <h2 className="text-primary-100">Voxora AI</h2>
+                    </Link>
+
+                    <Link
+                        href="/progress"
+                        className="text-sm font-semibold text-light-100 hover:text-primary-200 transition-colors"
+                    >
+                        My Progress
                     </Link>
                 </nav>
 

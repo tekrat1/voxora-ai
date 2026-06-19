@@ -11,11 +11,11 @@ export async function createFeedback(params: CreateFeedbackParams) {
 
   try {
     const formattedTranscript = transcript
-      .map(
-        (sentence: { role: string; content: string }) =>
-          `- ${sentence.role}: ${sentence.content}\n`
-      )
-      .join("");
+        .map(
+            (sentence: { role: string; content: string }) =>
+                `- ${sentence.role}: ${sentence.content}\n`
+        )
+        .join("");
 
     const { object } = await generateObject({
       model: google("gemini-2.0-flash-001", {
@@ -35,7 +35,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
         - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
         `,
       system:
-        "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
+          "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
     });
 
     const feedback = {
@@ -73,16 +73,16 @@ export async function getInterviewById(id: string): Promise<Interview | null> {
 }
 
 export async function getFeedbackByInterviewId(
-  params: GetFeedbackByInterviewIdParams
+    params: GetFeedbackByInterviewIdParams
 ): Promise<Feedback | null> {
   const { interviewId, userId } = params;
 
   const querySnapshot = await db
-    .collection("feedback")
-    .where("interviewId", "==", interviewId)
-    .where("userId", "==", userId)
-    .limit(1)
-    .get();
+      .collection("feedback")
+      .where("interviewId", "==", interviewId)
+      .where("userId", "==", userId)
+      .limit(1)
+      .get();
 
   if (querySnapshot.empty) return null;
 
@@ -91,17 +91,17 @@ export async function getFeedbackByInterviewId(
 }
 
 export async function getLatestInterviews(
-  params: GetLatestInterviewsParams
+    params: GetLatestInterviewsParams
 ): Promise<Interview[] | null> {
   const { userId, limit = 20 } = params;
 
   const interviews = await db
-    .collection("interviews")
-    .orderBy("createdAt", "desc")
-    .where("finalized", "==", true)
-    .where("userId", "!=", userId)
-    .limit(limit)
-    .get();
+      .collection("interviews")
+      .orderBy("createdAt", "desc")
+      .where("finalized", "==", true)
+      .where("userId", "!=", userId)
+      .limit(limit)
+      .get();
 
   return interviews.docs.map((doc) => ({
     id: doc.id,
@@ -110,16 +110,36 @@ export async function getLatestInterviews(
 }
 
 export async function getInterviewsByUserId(
-  userId: string
+    userId: string
 ): Promise<Interview[] | null> {
   const interviews = await db
-    .collection("interviews")
-    .where("userId", "==", userId)
-    .orderBy("createdAt", "desc")
-    .get();
+      .collection("interviews")
+      .where("userId", "==", userId)
+      .orderBy("createdAt", "desc")
+      .get();
 
   return interviews.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   })) as Interview[];
+}
+
+export async function getFeedbackByUserId(
+    userId: string
+): Promise<Feedback[]> {
+  const querySnapshot = await db
+      .collection("feedback")
+      .where("userId", "==", userId)
+      .get();
+
+  const feedback = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Feedback[];
+
+  // Sort oldest -> newest so progress-over-time charts read left to right.
+  // (Avoids relying on a Firestore composite index for orderBy + where.)
+  return feedback.sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
 }

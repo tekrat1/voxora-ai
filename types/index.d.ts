@@ -1,6 +1,7 @@
 interface Feedback {
   id: string;
   interviewId: string;
+  userId: string;
   totalScore: number;
   categoryScores: Array<{
     name: string;
@@ -96,4 +97,18 @@ interface InterviewFormProps {
 
 interface TechIconProps {
   techStack: string[];
+}
+
+interface ProgressDataPoint {
+  feedbackId: string;
+  interviewId: string;
+  role: string;
+  type: string;
+  totalScore: number;
+  categoryScores: Array<{
+    name: string;
+    score: number;
+    comment: string;
+  }>;
+  createdAt: string;
 }
