@@ -4,31 +4,27 @@ import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 
 import { isAuthenticated } from "@/lib/actions/auth.action";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
-  const isUserAuthenticated = await isAuthenticated();
+    const isUserAuthenticated = await isAuthenticated();
+    if (!isUserAuthenticated) redirect("/sign-in");
 
-  if (!isUserAuthenticated) redirect("/sign-in");
+    return (
+        <div className="relative">
+            <AnimatedBackground />
+            <div className="root-layout relative z-10">
+                <nav>
+                    <Link href="/" className="flex items-center gap-2">
+                        <Image src="/logo.svg" alt="Voxora AI Logo" width={38} height={32} />
+                        <h2 className="text-primary-100">Voxora AI</h2>
+                    </Link>
+                </nav>
 
-  return (
-      <div className="root-layout">
-        <nav>
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.svg" alt="MockMate Logo" width={38} height={32} />
-            <h2 className="text-primary-100">Voxora AI – AI Interview Preparation Platform</h2>
-          </Link>
-        </nav>
-
-        {children}
-      </div>
-  );
+                {children}
+            </div>
+        </div>
+    );
 };
 
 export default Layout;
-
-
-
-
-
-
-
