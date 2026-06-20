@@ -24,7 +24,6 @@ interface Props {
     avgScore: number;
 }
 
-// Derive skill gaps from areas for improvement across all interviews
 function deriveSkillGaps(feedbacks: EnrichedFeedback[]): string[] {
     const gapCounts: Record<string, number> = {};
     feedbacks.forEach((fb) => {
@@ -33,14 +32,12 @@ function deriveSkillGaps(feedbacks: EnrichedFeedback[]): string[] {
             gapCounts[key] = (gapCounts[key] ?? 0) + 1;
         });
     });
-    // Return top 5 most frequent gaps
     return Object.entries(gapCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5)
         .map(([gap]) => gap);
 }
 
-// Generate a deterministic 14-day roadmap from skill gaps
 function generateRoadmap(gaps: string[], targetRole: string) {
     const days: Array<{ day: number; task: string; focus: string; done: boolean }> = [];
     const skills = gaps.length > 0 ? gaps : ["Communication", "Problem Solving", "System Design"];
@@ -148,7 +145,56 @@ export default function CareerCopilotClient({
 
     return (
         <div className="flex flex-col gap-8 max-w-5xl mx-auto pb-16">
-            {/* Header */}
+
+            {/* ── Upcoming Features Banner ── */}
+            <div className="rounded-2xl border border-dashed border-amber-400/30 bg-amber-400/5 p-5">
+                <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-bold bg-amber-400/20 text-amber-400 px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">
+                        Upcoming in Copilot
+                    </span>
+                    <span className="text-xs text-light-400">
+                        Features coming soon to supercharge your career
+                    </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[
+                        {
+                            icon: "🧑‍💼",
+                            title: "Live Mentor Sessions",
+                            desc: "1-on-1 video coaching with industry experts",
+                            eta: "Q3 2026",
+                        },
+                        {
+                            icon: "📝",
+                            title: "AI Resume Generation",
+                            desc: "Auto-build an ATS-optimised resume from your history",
+                            eta: "Q3 2026",
+                        },
+                        {
+                            icon: "🏢",
+                            title: "Company-Specific Prep",
+                            desc: "Tailored question banks for Google, Amazon & more",
+                            eta: "Q4 2026",
+                        },
+                    ].map((f) => (
+                        <div
+                            key={f.title}
+                            className="flex items-start gap-3 bg-white/3 rounded-xl p-3"
+                        >
+                            <span className="text-xl">{f.icon}</span>
+                            <div>
+                                <p className="text-xs font-bold text-light-100">{f.title}</p>
+                                <p className="text-[11px] text-light-400 mt-0.5">{f.desc}</p>
+                                <span className="text-[10px] text-amber-400 font-semibold">
+                                    {f.eta}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* ── Header ── */}
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-primary-200 text-sm font-semibold tracking-wider uppercase">
                     <span>⚡</span>
@@ -163,7 +209,7 @@ export default function CareerCopilotClient({
                 </p>
             </div>
 
-            {/* Top Row: Score Gauge + Target Role */}
+            {/* ── Top Row: Score Gauge + Target Role ── */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Current Level Card */}
                 <div className="card p-6 flex flex-col gap-4">
@@ -183,11 +229,9 @@ export default function CareerCopilotClient({
                         </span>
                     </div>
 
-                    {/* Score Arc */}
                     <div className="flex flex-col items-center gap-2">
                         <div className="relative w-40 h-24 overflow-hidden">
                             <svg viewBox="0 0 160 90" className="w-full h-full">
-                                {/* BG arc */}
                                 <path
                                     d="M 16 80 A 64 64 0 0 1 144 80"
                                     fill="none"
@@ -195,7 +239,6 @@ export default function CareerCopilotClient({
                                     strokeWidth="12"
                                     strokeLinecap="round"
                                 />
-                                {/* Score arc */}
                                 <path
                                     d="M 16 80 A 64 64 0 0 1 144 80"
                                     fill="none"
@@ -222,7 +265,6 @@ export default function CareerCopilotClient({
                         </p>
                     </div>
 
-                    {/* Trend */}
                     {allFeedbacks.length >= 2 && (() => {
                         const prev = allFeedbacks[allFeedbacks.length - 2].totalScore;
                         const curr = allFeedbacks[allFeedbacks.length - 1].totalScore;
@@ -236,9 +278,7 @@ export default function CareerCopilotClient({
                                 }}
                             >
                                 <span>{delta >= 0 ? "↑" : "↓"}</span>
-                                <span>
-                                    {Math.abs(delta)} pts from last interview
-                                </span>
+                                <span>{Math.abs(delta)} pts from last interview</span>
                             </div>
                         );
                     })()}
@@ -288,7 +328,6 @@ export default function CareerCopilotClient({
                         </div>
                     )}
 
-                    {/* Gap to target */}
                     <div className="flex flex-col gap-2">
                         <div className="flex justify-between text-xs text-light-400">
                             <span>Progress to readiness</span>
@@ -315,7 +354,7 @@ export default function CareerCopilotClient({
                 </div>
             </div>
 
-            {/* Skill Gap Analysis */}
+            {/* ── Skill Gap Analysis ── */}
             <div className="card p-6 flex flex-col gap-5">
                 <div className="flex items-center justify-between">
                     <div>
@@ -329,7 +368,6 @@ export default function CareerCopilotClient({
                     </span>
                 </div>
 
-                {/* Category Averages */}
                 {categoryAverages.length > 0 && (
                     <div className="flex flex-col gap-3">
                         {categoryAverages.map(({ name, avg }) => {
@@ -349,10 +387,7 @@ export default function CareerCopilotClient({
                                                 </span>
                                             )}
                                         </div>
-                                        <span
-                                            className="text-xs font-bold"
-                                            style={{ color: barColor }}
-                                        >
+                                        <span className="text-xs font-bold" style={{ color: barColor }}>
                                             {avg}/100
                                         </span>
                                     </div>
@@ -372,7 +407,6 @@ export default function CareerCopilotClient({
                     </div>
                 )}
 
-                {/* Text Gap List */}
                 {skillGaps.length > 0 && (
                     <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
                         <p className="text-xs text-light-400 font-semibold uppercase tracking-wider">
@@ -398,7 +432,7 @@ export default function CareerCopilotClient({
                 )}
             </div>
 
-            {/* 14-Day Roadmap */}
+            {/* ── 14-Day Roadmap ── */}
             <div className="card p-6 flex flex-col gap-5">
                 <div
                     className="flex items-center justify-between cursor-pointer"
@@ -423,14 +457,14 @@ export default function CareerCopilotClient({
                             </p>
                         </div>
                     </div>
-                    <span className="text-light-400 text-lg transition-transform duration-200"
-                          style={{ transform: roadmapOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+                    <span
+                        className="text-light-400 text-lg transition-transform duration-200"
+                        style={{ transform: roadmapOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                     >
                         ⌄
                     </span>
                 </div>
 
-                {/* Progress bar */}
                 <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                     <div
                         className="h-full rounded-full transition-all duration-500"
@@ -451,37 +485,25 @@ export default function CareerCopilotClient({
                                     onClick={() => toggleDay(day)}
                                     className="flex items-start gap-3 text-left p-4 rounded-xl border transition-all duration-200"
                                     style={{
-                                        background: done
-                                            ? "rgba(0,255,163,0.06)"
-                                            : "rgba(255,255,255,0.03)",
-                                        borderColor: done
-                                            ? "rgba(0,255,163,0.25)"
-                                            : "rgba(255,255,255,0.07)",
+                                        background: done ? "rgba(0,255,163,0.06)" : "rgba(255,255,255,0.03)",
+                                        borderColor: done ? "rgba(0,255,163,0.25)" : "rgba(255,255,255,0.07)",
                                     }}
                                 >
                                     <div
                                         className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
                                         style={{
-                                            background: done
-                                                ? "rgba(0,255,163,0.2)"
-                                                : "rgba(255,255,255,0.06)",
+                                            background: done ? "rgba(0,255,163,0.2)" : "rgba(255,255,255,0.06)",
                                             color: done ? "#00FFA3" : "#8AA6C1",
-                                            border: done
-                                                ? "1px solid rgba(0,255,163,0.4)"
-                                                : "1px solid rgba(255,255,255,0.1)",
+                                            border: done ? "1px solid rgba(0,255,163,0.4)" : "1px solid rgba(255,255,255,0.1)",
                                         }}
                                     >
                                         {done ? "✓" : day}
                                     </div>
                                     <div className="flex flex-col gap-0.5">
-                                        <span
-                                            className={`text-sm font-medium ${done ? "line-through text-light-400" : "text-light-100"}`}
-                                        >
+                                        <span className={`text-sm font-medium ${done ? "line-through text-light-400" : "text-light-100"}`}>
                                             {task}
                                         </span>
-                                        <span className="text-xs text-light-400">
-                                            Focus: {focus}
-                                        </span>
+                                        <span className="text-xs text-light-400">Focus: {focus}</span>
                                     </div>
                                 </button>
                             );
@@ -490,15 +512,13 @@ export default function CareerCopilotClient({
                 )}
             </div>
 
-            {/* Strengths Snapshot */}
+            {/* ── Strengths Snapshot ── */}
             {latestFeedback && latestFeedback.strengths.length > 0 && (
                 <div className="card p-6 flex flex-col gap-4">
                     <div className="flex items-center gap-2">
                         <span className="text-lg">💪</span>
                         <h3 className="text-xl font-bold text-white">Your Strengths</h3>
-                        <span className="text-xs text-light-400 ml-auto">
-                            From latest interview
-                        </span>
+                        <span className="text-xs text-light-400 ml-auto">From latest interview</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {latestFeedback.strengths.map((s, i) => (
@@ -518,7 +538,7 @@ export default function CareerCopilotClient({
                 </div>
             )}
 
-            {/* CTA */}
+            {/* ── CTA ── */}
             <div
                 className="rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4"
                 style={{

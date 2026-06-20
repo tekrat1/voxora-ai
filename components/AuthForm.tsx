@@ -110,8 +110,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 ? "Welcome back to Voxora AI"
                 : "Start your journey with Voxora AI"}
           </h3>
-          <p className="text-center text-light-400 text-sm -mt-4">
-            AI Interview Preparation Platform
+          <p className="text-center text-user-primary text-sm -mt-4 font-semibold">
+            Your AI Career Copilot
           </p>
 
           <Form {...form}>
@@ -160,6 +160,31 @@ const AuthForm = ({ type }: { type: FormType }) => {
               {!isSignIn ? "Sign In" : "Sign Up"}
             </Link>
           </p>
+
+          {/* Career Operating System Section */}
+          <div className="mt-2 rounded-xl border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
+            <p className="text-center text-xs font-bold uppercase tracking-widest text-user-primary opacity-80">
+              Career Operating System
+            </p>
+            <div className="grid grid-cols-2 gap-2 text-xs text-light-400">
+              <div className="flex items-start gap-2">
+                <span className="text-base">🎯</span>
+                <span><strong className="text-light-100">AI Mock Interviews</strong> — Real-time practice with instant feedback</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-base">📄</span>
+                <span><strong className="text-light-100">Resume → Job Match</strong> — AI matches your resume to top roles</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-base">📊</span>
+                <span><strong className="text-light-100">Progress Tracking</strong> — Visualise your skill growth over time</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-base">⚡</span>
+                <span><strong className="text-light-100">Career Copilot</strong> — Personalised AI career coaching</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
   );

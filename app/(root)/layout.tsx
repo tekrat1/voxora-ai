@@ -24,9 +24,12 @@ const Layout = async ({ children }: { children: ReactNode }) => {
                     <div className="flex items-center gap-6">
                         <Link
                             href="/jobs"
-                            className="text-sm font-semibold text-light-100 hover:text-primary-200 transition-colors"
+                            className="text-sm font-semibold text-light-100 hover:text-primary-200 transition-colors flex items-center gap-1"
                         >
                             Job Match
+                            <span className="text-[9px] font-bold bg-amber-400/20 text-amber-400 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                                Soon
+                            </span>
                         </Link>
                         <Link
                             href="/progress"
