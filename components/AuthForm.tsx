@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 
 import { signIn, signUp } from "@/lib/actions/auth.action";
 import FormField from "./FormField";
+import AISidePanel from "./AISidePanel";
+import AboutVoxoraSection from "./AboutVoxoraSection";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -98,94 +100,129 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const isSignIn = type === "sign-in";
 
   return (
-      <div className="card-border lg:min-w-[566px]">
-        <div className="flex flex-col gap-6 card py-14 px-10">
-          <div className="flex flex-row gap-2 justify-center">
-            <Image src="/logo.svg" alt="logo" height={32} width={38} />
-            <h2 className="text-primary-100">Voxora AI</h2>
+      <div className="w-full flex flex-col items-center">
+        {/* Split-screen: two separate panels with a gap, both stretched to equal height */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+          {/* LEFT: AI visual panel (hidden on small screens) */}
+          <div className="hidden lg:flex card-border w-full h-full">
+            <div className="card overflow-hidden p-0 w-full h-full flex">
+              <AISidePanel />
+            </div>
           </div>
 
-          <h3 className="text-center">
-            {isSignIn
-                ? "Welcome back to Voxora AI"
-                : "Start your journey with Voxora AI"}
-          </h3>
-          <p className="text-center text-user-primary text-sm -mt-4 font-semibold">
-            Your AI Career Copilot
-          </p>
+          {/* RIGHT: Auth form */}
+          <div className="card-border w-full h-full">
+            <div className="card overflow-hidden p-0 flex flex-col bg-[#0B1220] h-full">
+              {/* top accent bar */}
+              <div className="h-[3px] max-h-[3px] w-full shrink-0 auth-top-bar" />
 
-          <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full space-y-6 mt-4 form"
-            >
-              {!isSignIn && (
-                  <FormField
-                      control={form.control}
-                      name="name"
-                      label="Name"
-                      placeholder="Your Name"
-                      type="text"
-                  />
-              )}
+              <div className="flex flex-col gap-5 px-6 py-8 sm:px-10 sm:py-10 flex-1 bg-[#0B1220]">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="flex items-center justify-center size-12 rounded-full border-2 border-primary-200/45 bg-gradient-to-br from-[#00D4FF40] to-[#00FFA333]">
+                    <Image src="/logo.svg" alt="logo" height={24} width={28} />
+                  </div>
+                  <div>
+                    <p className="text-white text-xl font-extrabold tracking-tight leading-none">
+                      Voxora AI
+                    </p>
+                    <p className="text-primary-200 text-[10px] font-semibold uppercase tracking-widest mt-1">
+                      Your AI Career Copilot
+                    </p>
+                  </div>
+                </div>
 
-              <FormField
-                  control={form.control}
-                  name="email"
-                  label="Email"
-                  placeholder="Your email address"
-                  type="email"
-              />
+                <div className="text-center">
+                  <h3 className="!text-lg">
+                    {isSignIn ? "Welcome back" : "Start your career journey"}
+                  </h3>
+                  <p className="text-light-400 text-[13px] mt-1">
+                    {isSignIn
+                        ? "Sign in to continue your career journey"
+                        : "Create an account to begin with Voxora AI"}
+                  </p>
+                </div>
 
-              <FormField
-                  control={form.control}
-                  name="password"
-                  label="Password"
-                  placeholder="Enter your password"
-                  type="password"
-              />
+                <Form {...form}>
+                  <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="w-full space-y-5 form"
+                  >
+                    {!isSignIn && (
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            label="Name"
+                            placeholder="Your Name"
+                            type="text"
+                        />
+                    )}
 
-              <Button className="btn" type="submit">
-                {isSignIn ? "Sign In" : "Create an Account"}
-              </Button>
-            </form>
-          </Form>
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        label="Email"
+                        placeholder="Your email address"
+                        type="email"
+                    />
 
-          <p className="text-center">
-            {isSignIn ? "No account yet?" : "Have an account already?"}
-            <Link
-                href={!isSignIn ? "/sign-in" : "/sign-up"}
-                className="font-bold text-user-primary ml-1"
-            >
-              {!isSignIn ? "Sign In" : "Sign Up"}
-            </Link>
-          </p>
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        label="Password"
+                        placeholder="Enter your password"
+                        type="password"
+                    />
 
-          {/* Career Operating System Section */}
-          <div className="mt-2 rounded-xl border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
-            <p className="text-center text-xs font-bold uppercase tracking-widest text-user-primary opacity-80">
-              Career Operating System
-            </p>
-            <div className="grid grid-cols-2 gap-2 text-xs text-light-400">
-              <div className="flex items-start gap-2">
-                <span className="text-base">🎯</span>
-                <span><strong className="text-light-100">AI Mock Interviews</strong> — Real-time practice with instant feedback</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-base">📄</span>
-                <span><strong className="text-light-100">Resume → Job Match</strong> — AI matches your resume to top roles</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-base">📊</span>
-                <span><strong className="text-light-100">Progress Tracking</strong> — Visualise your skill growth over time</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-base">⚡</span>
-                <span><strong className="text-light-100">Career Copilot</strong> — Personalised AI career coaching</span>
+                    <Button className="btn" type="submit">
+                      {isSignIn ? "Sign In" : "Create an Account"}
+                    </Button>
+                  </form>
+                </Form>
+
+                <p className="text-center text-[13px]">
+                  {isSignIn ? "No account yet?" : "Have an account already?"}
+                  <Link
+                      href={isSignIn ? "/sign-up" : "/sign-in"}
+                      className="font-bold text-primary-200 ml-1"
+                  >
+                    {isSignIn ? "Sign Up" : "Sign In"}
+                  </Link>
+                </p>
+
+                {/* Career Operating System mini-grid */}
+                <div className="rounded-xl border border-primary-200/10 bg-primary-200/[0.04] p-3 mt-1">
+                  <p className="text-primary-200 text-[9px] font-bold uppercase tracking-[0.18em] text-center mb-2">
+                    Career Operating System
+                  </p>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {[
+                      { icon: "🎯", title: "AI Mock Interviews", sub: "Practice & feedback" },
+                      { icon: "📄", title: "Resume → Job Match", sub: "AI role matching" },
+                      { icon: "📊", title: "Progress Tracking", sub: "Skill growth charts" },
+                      { icon: "⚡", title: "Career Copilot", sub: "AI coaching" },
+                    ].map((f) => (
+                        <div
+                            key={f.title}
+                            className="flex items-center gap-1.5 rounded-lg border border-primary-200/10 bg-white/[0.03] px-2 py-1.5"
+                        >
+                          <span className="text-sm leading-none">{f.icon}</span>
+                          <div className="leading-tight">
+                            <p className="text-light-100 text-[9px] font-semibold">
+                              {f.title}
+                            </p>
+                            <p className="text-light-400 text-[8px]">{f.sub}</p>
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Scroll-down: About Voxora */}
+        <AboutVoxoraSection />
       </div>
   );
 };
